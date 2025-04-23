@@ -4,7 +4,10 @@ import bodyParser from "body-parser";
 import { spawn } from "child_process";
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "https://helpful-treacle-7f8ee1.netlify.app" // your actual frontend domain
+}));
+
 app.use(bodyParser.json()); // Parse JSON body
 
 // API Endpoint to Handle React's Request
