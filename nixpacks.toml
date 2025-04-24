@@ -5,4 +5,4 @@ nixpkgs = ["python3", "python3Packages.pip"]
 cmds = ["npm install", "pip3 install -r requirements.txt"]
 
 [start]
-cmd = "node index.js"
+cmd = "node server.js"
