@@ -8,9 +8,14 @@ const app = express();
 // CORS configuration
 app.use(cors({
   origin: "https://helpful-treacle-7f8ee1.netlify.app", // your frontend URL
+  methods: ["GET", "POST", "OPTIONS"], // Allow these HTTP methods
+  allowedHeaders: ["Content-Type"], // Allow these headers
 }));
 
 app.use(bodyParser.json()); // Parse JSON body
+
+// Handle OPTIONS preflight request
+app.options("*", cors());
 
 // API Endpoint to Handle React's Request
 app.post("/run-audit", (req, res) => {
