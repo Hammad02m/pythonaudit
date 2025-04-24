@@ -37,7 +37,7 @@ app.post("/run-audit", (req, res) => {
   console.log("Received data from React:", formData);
 
   // Spawn Python script
-  const pythonProcess = spawn("python", ["audittimecalculator.py"]);
+  const pythonProcess = spawn("python3", ["audittimecalculator.py"]);
 
   // Send data to Python
   pythonProcess.stdin.write(JSON.stringify(formData));
