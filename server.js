@@ -6,16 +6,20 @@ import { spawn } from "child_process";
 const app = express();
 
 // CORS configuration
-app.use(cors({
+const corsOptions = {
   origin: "https://helpful-treacle-7f8ee1.netlify.app", // your frontend URL
   methods: ["GET", "POST", "OPTIONS"], // Allow these HTTP methods
-  allowedHeaders: ["Content-Type"], // Allow these headers
-}));
+  allowedHeaders: ["Content-Type", "Authorization"], // Allow these headers
+  credentials: true, // Allow cookies or other credentials to be included in requests
+};
 
-app.use(bodyParser.json()); // Parse JSON body
+app.use(cors(corsOptions)); // Use CORS middleware
 
-// Handle OPTIONS preflight request
-app.options("*", cors());
+// Middleware to parse JSON request body
+app.use(bodyParser.json()); 
+
+// Handle OPTIONS preflight requests
+app.options("*", cors(corsOptions));
 
 // API Endpoint to Handle React's Request
 app.post("/run-audit", (req, res) => {
