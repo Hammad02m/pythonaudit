@@ -215,12 +215,12 @@ def extract_ISO14001cert_values(file_path, personnel_count, risk):
     # If no matching range is found, return None
     return None
 
-def readstandarddata(nace_code, standard, renewaud, path, employees, sheet):
+def readstandarddata(nace_code, standard, renewaud, path, employees, sheet, complexity):
     if(standard=="ISO 9001"):
         auditdata = extract_ISO9001values(path, sheet, employees)
         return auditdata
     if(standard=="ISO 45001"):
-        risk = get_risk_by_nace('risk45001.xlsx', nace_code)
+        risk = complexity
         if(renewaud==True):
             auditdata = extract_ISO45001recert_values(path,employees, risk)
             return auditdata
@@ -228,7 +228,7 @@ def readstandarddata(nace_code, standard, renewaud, path, employees, sheet):
             auditdata = extract_ISO45001cert_values(path, employees, risk)
             return auditdata
     if(standard=="ISO 14001"):
-        risk = get_risk_by_nace('risk14001.xlsx', nace_code)
+        risk = complexity
         if(renewaud==True):
             auditdata = extract_ISO14001recert_values(path, employees, risk)
             return auditdata
@@ -376,6 +376,7 @@ def audittime(auditdata):
             except (ValueError, TypeError, KeyError):
                 justification = ""  # Default to empty string if there's an error
 
+
             try:
                 if site_id == 0:
                     centralsitefun = site.get("centralFunctions", 0)
@@ -439,6 +440,12 @@ def audittime(auditdata):
             if(standard=="ISO 14001"):          
                 riskk = get_risk_by_nace('risk14001.xlsx', nacecode)
             
+            try:
+                #formData.sites[selectedSite]?.standardsData?.[standard]?.complexit
+                complexity = (standard_data.get("complexity", riskk))
+            except (ValueError, TypeError, KeyError):
+                complexity = riskk  # Default to LOW if there's an error
+
             if site_id not in total_site_times:
                     total_site_times[site_id] = 0
                     total_stage1_times[site_id] = 0
@@ -453,7 +460,7 @@ def audittime(auditdata):
             file_path = file_paths[standard]["recert"] if rene == True else file_paths[standard]["cert"]
             sheet_name = file_paths[standard]["sheet"]["recert"] if rene == True else file_paths[standard]["sheet"]["cert"]
 
-            audit_data = readstandarddata(nacecode, standard, rene, file_path, effective_employees, sheet_name)
+            audit_data = readstandarddata(nacecode, standard, rene, file_path, effective_employees, sheet_name,complexity)
             visit_time = round(audit_data["visit"], 3)
             prep_time = round(audit_data["prep"],3)
             audit_time = round(audit_data["audit"], 3)
@@ -541,7 +548,8 @@ def audittime(auditdata):
                 'adjusted_stage1plus2': round(adjusted_stage1plus2,2),
                 'survauditdays': round(survauditdays,2),
                 'surveil_prep_report': round(surveil_prep_report,2),
-                'risk' : riskk
+                'risk' : riskk,
+                'complexity' : complexity,
             })
     
     results["totals"] = {
