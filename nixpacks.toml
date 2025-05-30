@@ -1,0 +1,9 @@
+[phases.setup]
+nixpkgs = ["python3", "python3Packages.pip"]
+cmds = ["apt-get update", "apt-get install -y python3 python3-pip"]
+
+[phases.build]
+cmds = ["npm install", "pip3 install -r requirements.txt"]
+
+[start]
+cmd = "node server.js"
