@@ -1,11 +1,10 @@
 [phases.setup]
-nixpkgs = ["python3", "python3Packages.pip", "python3Packages.venv"]
+nixpkgs = ["python3", "python3Packages.pip"]
 
 [phases.install]
 cmds = [
-  "python3 -m venv /tmp/venv",
   "npm install",
-  "/tmp/venv/bin/pip install -r requirements.txt"
+  "pip3 install --break-system-packages -r requirements.txt"
 ]
 
 [variables]
