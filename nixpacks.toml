@@ -1,9 +1,16 @@
 [phases.setup]
-nixpkgs = ["python3", "python3Packages.pip"]
-cmds = ["apt-get update", "apt-get install -y python3 python3-pip"]
+nixpkgs = ["python3", "python3Packages.pip", "python3Packages.venv"]
 
-[phases.build]
-cmds = ["npm install", "pip3 install -r requirements.txt"]
+[phases.install]
+cmds = [
+  "python3 -m venv /tmp/venv",
+  "npm install",
+  "/tmp/venv/bin/pip install -r requirements.txt"
+]
+
+[variables]
+PATH = "/tmp/venv/bin:$PATH"
+VIRTUAL_ENV = "/tmp/venv"
 
 [start]
 cmd = "node server.js"
